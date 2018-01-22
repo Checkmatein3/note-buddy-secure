@@ -1,0 +1,126 @@
+<resources>
+    <!--Activities-->
+    <string name="app_name">NoteBuddy</string>
+    <string name="title_activity_notes">Your NoteBuddy</string>
+    <string name="title_activity_login">Login</string>
+    <string name="title_activity_setup">Setup</string>
+    <string name="title_activity_create_note">Note</string>
+
+    <!-- System information -->
+    <string name="error_starting_app">Cannot start the application</string>
+    <string name="error_general">Something went wrong</string>
+    <string name="error_login_wrong_password">Password is incorrect</string>
+    <string name="error_login_general">Cannot login</string>
+    <string name="error_storing_password">Cannot store the password</string>
+    <string name="error_no_permission">No permission to do this</string>
+    <string name="error_cannot_save">Cannot save file</string>
+    <string name="error_cannot_read_files">Cannot read files</string>
+    <string name="error_cannot_delete">Cannot delete</string>
+    <string name="error_nothing_to_delete">Nothing to delete</string>
+    <string name="error_some_not_deleted">Some files are not deleted</string>
+    <string name="success_login_general">Logged in</string>
+    <string name="success_saved">Saved</string>
+    <string name="success_changed">Changed</string>
+    <string name="success_deleted">Deleted</string>
+    <string name="success_setup_general">Setup completed</string>
+    <string name="settings_deleted">Settings deleted</string>
+    <string name="file_deleted">File deleted</string>
+
+    <!-- Actions -->
+    <string name="action_try_again">Try again</string>
+    <string name="action_provide_user">Fill in a username</string>
+    <string name="action_provide_password">Fill in a password</string>
+    <string name="action_provide_password_check">Fill in the password again</string>
+    <string name="action_reset">Reset</string>
+    <string name="action_back">Back</string>
+
+    <!-- Greetings -->
+    <string name="greeting_general">Hi</string>
+    <string name="greeting_username">Logged in as</string>
+    <string name="greeting_intro">Brr, it is quite empty in here. Time to add a note?</string>
+
+    <!-- Dialog -->
+    <string name="dialog_question_general">Are you sure?</string>
+    <string name="dialog_question_confirm">Yes</string>
+    <string name="dialog_question_deny">No</string>
+    <string name="dialog_answer_yes">Yes</string>
+    <string name="dialog_answer_cancel">Cancel</string>
+    <string name="dialog_title_note_exists">Note already exists</string>
+    <string name="dialog_question_overwrite_note">Are you sure to overwrite the existing note?</string>
+    <string name="dialog_title_old_note">Delete old note</string>
+    <string name="dialog_question_delete_old_note">Because the note title has changed, this note will be saved as a new one. Delete the previously stored note?</string>
+    <string name="dialog_answer_delete_old_note">Delete</string>
+    <string name="dialog_answer_keep_old_note">Keep</string>
+    <string name="dialog_title_delete_note">Delete note</string>
+    <string name="dialog_question_delete_note">Are you sure to delete this note?</string>
+    <string name="dialog_title_delete_everything">Delete notes and credentials</string>
+    <string name="dialog_question_delete_everything">Are you sure to delete everything?</string>
+    <string name="dialog_title_store_encrypted">Encrypt or decrypt</string>
+    <string name="dialog_question_store_encrypted">Want to store the external notes encrypted or decrypted?</string>
+    <string name="dialog_answer_encrypt">Encrypted</string>
+    <string name="dialog_answer_decrypt">Decrypted</string>
+    <string name="dialog_title_delete_all_notes">Delete all notes</string>
+    <string name="dialog_question_delete_all_notes">Are you sure to delete all notes?</string>
+    <string name="dialog_title_delete_ext_storage">Clear external storage</string>
+    <string name="dialog_question_delete_ext_storage">Are you sure to delete all files in</string>
+
+    <!-- String related to dev mode -->
+    <string name="dev_clear_shared_preferences">Clear shared prefs</string>
+
+    <!-- String related to text from other apps -->
+    <string name="title_for_external_note">Note</string>
+
+    <!-- Strings related to backup -->
+    <string name="backup_success">Notes copied successfully in</string>
+    <string name="backup_error">Cannot create notes backup. Maybe there are no notes to backup</string>
+    <string name="backup_encrypted">Encrypted</string>
+    <string name="backup_decrypted">Decrypted</string>
+    <string name="backup_number_created_singular">Note is backed up successfully</string>
+    <string name="backup_number_created_plural">Notes are backed up successfully</string>
+    <string name="backup_ext_cleared">External backup storage cleared</string>
+    <string name="backup_number_deleted_singular">File is deleted successfully</string>
+    <string name="backup_number_deleted_plural">Files are deleted successfully</string>
+
+    <!-- Strings related to importing external notes -->
+    <string name="import_success">External notes imported successfully</string>
+    <string name="import_error">Cannot import external notes. Maybe there are none</string>
+    <string name="import_info">Importing external notes may take a while. Please wait</string>
+
+    <!-- String related to menu -->
+    <string name="menu_lock">Lock</string>
+    <string name="menu_remove_everything">Reset NoteBuddy</string>
+    <string name="menu_credits">Credits</string>
+    <string name="menu_backup">Create backup</string>
+    <string name="menu_import">Import backed up notes</string>
+    <string name="menu_clear">Delete all notes</string>
+    <string name="menu_clear_ext">Clear backup storage</string>
+    <string name="menu_feedback">Feedback</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_username">Username</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_register">Register</string>
+    <string name="action_login">Login</string>
+    <string name="action_complete">Done!</string>
+    <string name="error_invalid_username">This username is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_invalid_password_check">Passwords are not the same</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+
+    <!-- Strings related to adding or editing a note -->
+    <string name="prompt_note_title">Title</string>
+    <string name="prompt_note_body">Note</string>
+    <string name="error_invalid_note_title">Note title is invalid. Must be bigger than 3 characters</string>
+    <string name="error_invalid_note_body">Note is invalid. This field may not be blank</string>
+
+    <!-- Strings related to navigation drawer -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!-- Strings related to settings -->
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_settings">Settings</string>
+</resources>
