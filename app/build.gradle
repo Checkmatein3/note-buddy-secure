@@ -5,7 +5,7 @@ android {
         config {
             keyAlias 'key0'
             keyPassword 'abcdefg'
-            storeFile file('/Users/Domenic/Documents/Untitled2.jks')
+            storeFile file('/Users/workspace/section1-group1/SigningConfig.jks')
             storePassword 'abcdefg'
         }
     }
