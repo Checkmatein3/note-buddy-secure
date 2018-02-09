@@ -10,9 +10,11 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.os.Build;
 
 import nl.yoerinijs.nb.R;
 import nl.yoerinijs.nb.files.misc.LocationCentral;
@@ -58,6 +60,7 @@ public class EditNoteActivity extends AppCompatActivity {
         FloatingActionButton m_backButton = (FloatingActionButton) findViewById(R.id.backButton);
         FloatingActionButton m_deleteButton = (FloatingActionButton) findViewById(R.id.deleteButton);
         FloatingActionButton m_shareButton = (FloatingActionButton) findViewById(R.id.shareButton);
+        FloatingActionButton m_cameraButton = (FloatingActionButton) findViewById(R.id.cameraButton);
 
         m_noteTitle = (EditText) findViewById(R.id.noteTitle);
         m_noteBody = (EditText) findViewById(R.id.noteText);
@@ -99,6 +102,38 @@ public class EditNoteActivity extends AppCompatActivity {
                         writeNote(noteTitle, noteFileName, noteBody);
                     }
                 }
+            }
+        });
+
+        m_cameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new AlertDialog.Builder(m_context)
+                        .setTitle(getString(R.string.dialog_question_camera))
+                        .setMessage(getString(R.string.dialog_question_overwrite_note))
+                        .setPositiveButton(R.string.dialog_answer_camera, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                                startActivityForResult(cameraIntent, 12);
+                            }
+                        })
+                        .setNegativeButton(R.string.dialog_answer_camera_roll, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent;
+                                //https://stackoverflow.com/questions/31218928/how-can-i-access-the-camera-roll-photos-on-android
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                                    intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                                    //intent.addCategory(Intent.CATEGORY_OPENABLE);
+                                } else {
+                                    intent = new Intent(Intent.ACTION_GET_CONTENT);
+                                }
+
+                                intent.setType("image/*");
+                                startActivityForResult(intent, 3645);
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
             }
         });
 
@@ -146,6 +181,15 @@ public class EditNoteActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent resultData) {
+        Log.d("test", "test");
+        if (requestCode == 3645 && resultData != null) {
+
+
+        }
     }
 
     /**
