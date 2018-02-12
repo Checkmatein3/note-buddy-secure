@@ -3,7 +3,14 @@ package nl.yoerinijs.nb.activities;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.hardware.Camera;
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraCharacteristics;
+import android.hardware.camera2.CameraManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -12,9 +19,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import android.os.Build;
+import android.provider.MediaStore;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.app.Activity;
+import android.support.v4.content.ContextCompat;
+
+import java.io.File;
 
 import nl.yoerinijs.nb.R;
 import nl.yoerinijs.nb.files.misc.LocationCentral;
@@ -46,6 +62,8 @@ public class EditNoteActivity extends AppCompatActivity {
     private String m_password;
 
     private TextfileReader m_textFileReader;
+
+    //static final int REQUEST_IMAGE_CAPTURE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,28 +126,39 @@ public class EditNoteActivity extends AppCompatActivity {
         m_cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                /*if (ContextCompat.checkSelfPermission((Activity)m_context,
+                        Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+
+                    if (ActivityCompat.shouldShowRequestPermissionRationale((Activity)m_context, Manifest.permission.CAMERA)) {
+
+
+                    } else {
+                        ActivityCompat.requestPermissions((Activity)m_context,
+                                new String[]{Manifest.permission.CAMERA},
+                                1);
+                    }
+
+                }*/
+                ActivityCompat.requestPermissions((Activity)m_context, new String[]{Manifest.permission.CAMERA}, 1);
                 new AlertDialog.Builder(m_context)
                         .setTitle(getString(R.string.dialog_question_camera))
                         .setMessage(getString(R.string.dialog_question_overwrite_note))
                         .setPositiveButton(R.string.dialog_answer_camera, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                                startActivityForResult(cameraIntent, 12);
+                                Intent intent;
+                                intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                                if (intent.resolveActivity(getPackageManager()) != null) {
+                                    startActivityForResult(intent, 1);
+                                }
                             }
                         })
                         .setNegativeButton(R.string.dialog_answer_camera_roll, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                Intent intent;
-                                //https://stackoverflow.com/questions/31218928/how-can-i-access-the-camera-roll-photos-on-android
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                                    intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                                    //intent.addCategory(Intent.CATEGORY_OPENABLE);
-                                } else {
-                                    intent = new Intent(Intent.ACTION_GET_CONTENT);
-                                }
-
+                                Intent intent = new Intent();
                                 intent.setType("image/*");
-                                startActivityForResult(intent, 3645);
+                                intent.setAction(Intent.ACTION_GET_CONTENT);
+                                startActivityForResult(Intent.createChooser(intent, "Select Picture"), 2018);
                             }
                         })
                         .setIcon(android.R.drawable.ic_dialog_alert)
@@ -184,12 +213,23 @@ public class EditNoteActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent resultData) {
-        Log.d("test", "test");
-        if (requestCode == 3645 && resultData != null) {
-
-
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            //mImageView.setImageBitmap(imageBitmap);
         }
+    }
+
+    private void openCamera() {
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File imageFile = new File(path, "Image_Story_.jpg");
+        //File pictureDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        //File imageFile = new File(pictureDirectory, imageName);
+        Uri pictureUri = Uri.fromFile(imageFile);
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, pictureUri);
+        startActivityForResult(cameraIntent,1313);
     }
 
     /**

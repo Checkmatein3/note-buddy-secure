@@ -3,6 +3,8 @@
     package="nl.yoerinijs.nb">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
 
     <application
         android:allowBackup="true"
@@ -44,5 +46,7 @@
             android:noHistory="true"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
+    <uses-feature android:name="android.hardware.camera"
+        android:required="true" />
 
 </manifest>
