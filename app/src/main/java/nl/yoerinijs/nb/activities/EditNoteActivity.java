@@ -14,6 +14,7 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -31,6 +32,9 @@ import android.app.Activity;
 import android.support.v4.content.ContextCompat;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import nl.yoerinijs.nb.R;
 import nl.yoerinijs.nb.files.misc.LocationCentral;
@@ -126,6 +130,10 @@ public class EditNoteActivity extends AppCompatActivity {
         m_cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale((Activity)m_context, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+
+                }
                 /*if (ContextCompat.checkSelfPermission((Activity)m_context,
                         Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
 
@@ -139,18 +147,14 @@ public class EditNoteActivity extends AppCompatActivity {
                     }
 
                 }*/
+                // Request permission to use the camera
                 ActivityCompat.requestPermissions((Activity)m_context, new String[]{Manifest.permission.CAMERA}, 1);
                 new AlertDialog.Builder(m_context)
                         .setTitle(getString(R.string.dialog_question_camera))
                         .setMessage(getString(R.string.dialog_question_overwrite_note))
                         .setPositiveButton(R.string.dialog_answer_camera, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                Intent intent;
-                                intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-                                if (intent.resolveActivity(getPackageManager()) != null) {
-                                    startActivityForResult(intent, 1);
-                                }
+                                openCamera();
                             }
                         })
                         .setNegativeButton(R.string.dialog_answer_camera_roll, new DialogInterface.OnClickListener() {
@@ -214,22 +218,55 @@ public class EditNoteActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1 && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            //mImageView.setImageBitmap(imageBitmap);
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
         }
+
     }
 
+
+    /// Open device camera
     private void openCamera() {
+        // Create camera intent
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        File imageFile = new File(path, "Image_Story_.jpg");
-        //File pictureDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        //File imageFile = new File(pictureDirectory, imageName);
+        File pictureDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        Uri photoUri = null;
+
+        /*try {
+            photoUri = FileProvider.getUriForFile(this, "my.package.name.provider", createImageFile());
+        } catch (IOException ex) {
+            // Error occurred while creating the File
+            return;
+        }*/
+        //Uri photoURI = FileProvider.getUriForFile(this, this.getApplicationContext().getPackageName() + ".my.package.name.provider", createImageFile());
+        /*String imageName = "Blah.jpg";
+        File imageFile = new File(pictureDirectory, imageName);
         Uri pictureUri = Uri.fromFile(imageFile);
-        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, pictureUri);
+        //Uri pictureUri = FileProvider.getUriForFile(m_context, m_context.getApplicationContext().getPackageName() + ".my.package.name.provider", createImageFile());
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, pictureUri);*/
+        //cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+        //cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+        // Launch camera intent
         startActivityForResult(cameraIntent,1313);
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DCIM), "Camera");
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        // = "file:" + image.getAbsolutePath();
+        return image;
     }
 
     /**
