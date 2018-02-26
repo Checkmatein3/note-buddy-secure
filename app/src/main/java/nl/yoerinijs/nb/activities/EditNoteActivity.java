@@ -59,6 +59,9 @@ public class EditNoteActivity extends AppCompatActivity {
         FloatingActionButton m_deleteButton = (FloatingActionButton) findViewById(R.id.deleteButton);
         FloatingActionButton m_shareButton = (FloatingActionButton) findViewById(R.id.shareButton);
 
+        //Linking to the upload button
+        FloatingActionButton m_uploadButton = (FloatingActionButton) findViewById(R.id.uploadButton);
+
         m_noteTitle = (EditText) findViewById(R.id.noteTitle);
         m_noteBody = (EditText) findViewById(R.id.noteText);
         m_password = getIntent().getStringExtra(LoginActivity.KEY_PASSWORD);
@@ -144,6 +147,14 @@ public class EditNoteActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     Toast.makeText(getApplicationContext(), getString(R.string.error_cannot_delete) + ". ", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        //Onclick listener for the upload button
+        m_uploadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                
             }
         });
     }
