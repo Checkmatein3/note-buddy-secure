@@ -14,11 +14,27 @@ import nl.yoerinijs.nb.security.EncryptionHandler;
  */
 public class TextfileWriter {
 
+    /**
+     * Calls an encryption function and then calls a write file function.
+     *
+     * @param context
+     * @param fileName
+     * @param fileContent
+     * @param password
+     * @throws Exception
+     */
     public void writeFile(Context context, String fileName, String fileContent, String password) throws Exception {
         String encryptedFileContent = EncryptionHandler.encryptFile(fileContent, password, context);
         writeFileContent(null, fileName, encryptedFileContent, context);
     }
 
+    /**
+     * Calls a write file function (no encryption).
+     *
+     * @param file
+     * @param fileContent
+     * @throws Exception
+     */
     public void writeExternalFile(File file, String fileContent) throws Exception {
         writeFileContent(file, null, fileContent, null);
     }
@@ -28,6 +44,7 @@ public class TextfileWriter {
             throw new IllegalStateException("File or file name must be provided!");
         }
         FileOutputStream fileOutputStream;
+
         if(null == file && null != context) {
             fileOutputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
         } else if(null != file) {
@@ -35,6 +52,7 @@ public class TextfileWriter {
         } else {
             throw new IllegalStateException("Expecting file is not null!");
         }
+
         try {
             fileOutputStream.write(fileContent.getBytes());
         } catch (FileNotFoundException f) {

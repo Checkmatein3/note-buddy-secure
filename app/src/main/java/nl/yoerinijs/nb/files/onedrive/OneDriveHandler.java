@@ -22,8 +22,6 @@ import java.io.File;
 
 public class OneDriveHandler {
 
-
-
     private final Context context;
 
 
