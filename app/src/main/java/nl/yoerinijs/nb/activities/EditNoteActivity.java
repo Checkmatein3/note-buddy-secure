@@ -154,7 +154,7 @@ public class EditNoteActivity extends AppCompatActivity {
         m_uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                
+
             }
         });
     }
