@@ -10,7 +10,8 @@ android {
         }
     }
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    flavorDimensions "versionCode"
+    buildToolsVersion '26.0.2'
     productFlavors {
         defaultConfig {
             applicationId "nl.yoerinijs.nb"

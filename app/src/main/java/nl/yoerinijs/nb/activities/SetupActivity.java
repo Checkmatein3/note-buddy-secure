@@ -126,9 +126,16 @@ public class SetupActivity extends AppCompatActivity {
                 showProgress(true);
                 Intent intent = new Intent();
                 intent.setClassName(m_context, PACKAGE_NAME + "." + NOTES_ACTIVITY);
+                //intent.putExtra(LoginActivity.KEY_PASSWORD, password);
+                //send username into the app after login, instead of password
+                password = KeyValueDB.getUsername(m_context);
                 intent.putExtra(LoginActivity.KEY_PASSWORD, password);
                 startActivity(intent);
                 finish();
+
+
+
+
             } catch (Exception e) {
                 Toast.makeText(getApplicationContext(), getString(R.string.error_cannot_save) + ". ", Toast.LENGTH_SHORT).show();
             }
