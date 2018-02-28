@@ -1,35 +1,26 @@
 package nl.yoerinijs.nb.activities;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.hardware.Camera;
-import android.hardware.camera2.CameraAccessException;
-import android.hardware.camera2.CameraCharacteristics;
-import android.hardware.camera2.CameraManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.Toast;
-import android.os.Build;
-import android.provider.MediaStore;
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.support.v4.app.ActivityCompat;
-import android.app.Activity;
-import android.support.v4.content.ContextCompat;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,6 +32,7 @@ import nl.yoerinijs.nb.files.misc.LocationCentral;
 import nl.yoerinijs.nb.files.text.TextfileReader;
 import nl.yoerinijs.nb.files.text.TextfileRemover;
 import nl.yoerinijs.nb.files.text.TextfileWriter;
+import nl.yoerinijs.nb.helpers.ImageAdapter;
 import nl.yoerinijs.nb.validators.NoteBodyValidator;
 import nl.yoerinijs.nb.validators.NoteTitleValidator;
 
@@ -59,6 +51,8 @@ public class EditNoteActivity extends AppCompatActivity {
 
     private EditText m_noteBody;
 
+    private GridView imagesView;
+
     private View m_focusView;
 
     private String m_location;
@@ -67,7 +61,7 @@ public class EditNoteActivity extends AppCompatActivity {
 
     private TextfileReader m_textFileReader;
 
-    //static final int REQUEST_IMAGE_CAPTURE = 1;
+    private ImageAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +77,12 @@ public class EditNoteActivity extends AppCompatActivity {
         FloatingActionButton m_deleteButton = (FloatingActionButton) findViewById(R.id.deleteButton);
         FloatingActionButton m_shareButton = (FloatingActionButton) findViewById(R.id.shareButton);
         FloatingActionButton m_cameraButton = (FloatingActionButton) findViewById(R.id.cameraButton);
+        imagesView = (GridView) findViewById(R.id.imagesView);
+
+        adapter = new ImageAdapter(m_context);
+        imagesView.setAdapter(adapter);
+
+        //imagesView.setAdapter(new ImageAdapter(this,R.id.bUploadImage,items));
 
         m_noteTitle = (EditText) findViewById(R.id.noteTitle);
         m_noteBody = (EditText) findViewById(R.id.noteText);
@@ -159,10 +159,7 @@ public class EditNoteActivity extends AppCompatActivity {
                         })
                         .setNegativeButton(R.string.dialog_answer_camera_roll, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent();
-                                intent.setType("image/*");
-                                intent.setAction(Intent.ACTION_GET_CONTENT);
-                                startActivityForResult(Intent.createChooser(intent, "Select Picture"), 2018);
+                                openCameraRoll();
                             }
                         })
                         .setIcon(android.R.drawable.ic_dialog_alert)
@@ -221,10 +218,18 @@ public class EditNoteActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
+            Uri selectedImage = data.getData();
+            adapter.images.add(selectedImage);
+            adapter.notifyDataSetChanged();
         }
-
     }
 
+    private void openCameraRoll() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select A Picture"), 1314);
+    }
 
     /// Open device camera
     private void openCamera() {
@@ -233,20 +238,20 @@ public class EditNoteActivity extends AppCompatActivity {
         File pictureDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         Uri photoUri = null;
 
-        /*try {
-            photoUri = FileProvider.getUriForFile(this, "my.package.name.provider", createImageFile());
+        try {
+            photoUri = FileProvider.getUriForFile(m_context, m_context.getApplicationContext().getPackageName() + ".my.package.name.provider", createImageFile());
         } catch (IOException ex) {
             // Error occurred while creating the File
             return;
-        }*/
+        }
         //Uri photoURI = FileProvider.getUriForFile(this, this.getApplicationContext().getPackageName() + ".my.package.name.provider", createImageFile());
-        /*String imageName = "Blah.jpg";
+        String imageName = "Blah211.jpg";
         File imageFile = new File(pictureDirectory, imageName);
         Uri pictureUri = Uri.fromFile(imageFile);
         //Uri pictureUri = FileProvider.getUriForFile(m_context, m_context.getApplicationContext().getPackageName() + ".my.package.name.provider", createImageFile());
-        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, pictureUri);*/
-        //cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-        //cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        //cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, pictureUri);
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+        cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
         // Launch camera intent
         startActivityForResult(cameraIntent,1313);
@@ -255,7 +260,7 @@ public class EditNoteActivity extends AppCompatActivity {
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
+        String imageFileName = "JPEGss_" + timeStamp + "_";
         File storageDir = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_DCIM), "Camera");
         File image = File.createTempFile(
