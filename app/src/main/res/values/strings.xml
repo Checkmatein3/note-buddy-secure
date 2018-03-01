@@ -88,6 +88,7 @@
 
     <!-- String related to menu -->
     <string name="menu_lock">Lock</string>
+    <string name="menu_changePW">Change password</string>
     <string name="menu_remove_everything">Reset NoteBuddy</string>
     <string name="menu_credits">Credits</string>
     <string name="menu_backup">Create backup</string>

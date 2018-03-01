@@ -145,8 +145,8 @@ public class LoginActivity extends AppCompatActivity {
     private void startActivity(@NonNull String activityName, boolean providePassword) {
         Intent intent = new Intent();
         if(providePassword) {
-            //intent.putExtra(KEY_PASSWORD, m_password);
-//send username into the app after login, instead of password.
+            /* intent.putExtra(KEY_PASSWORD, m_password);
+            send username into the app after login, instead of password. */
             try{
                 m_password = KeyValueDB.getUsername(m_context);
             } catch (Exception e) {

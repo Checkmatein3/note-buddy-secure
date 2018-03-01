@@ -7,6 +7,9 @@
             android:id="@+id/nav_lock"
             android:icon="@drawable/ic_lock_black_24dp"
             android:title="@string/menu_lock" />
+        <item
+            android:id="@+id/nav_change"
+            android:title="@string/menu_changePW" />
         <item android:title="@string/menu_clear"
             android:id="@+id/nav_clear"
             android:icon="@drawable/ic_delete_black_24dp" />
