@@ -18,6 +18,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.Toast;
@@ -63,6 +64,8 @@ public class EditNoteActivity extends AppCompatActivity {
 
     private ImageAdapter adapter;
 
+    private Uri photoUri2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,8 +85,6 @@ public class EditNoteActivity extends AppCompatActivity {
         adapter = new ImageAdapter(m_context);
         imagesView.setAdapter(adapter);
 
-        //imagesView.setAdapter(new ImageAdapter(this,R.id.bUploadImage,items));
-
         m_noteTitle = (EditText) findViewById(R.id.noteTitle);
         m_noteBody = (EditText) findViewById(R.id.noteText);
         m_password = getIntent().getStringExtra(LoginActivity.KEY_PASSWORD);
@@ -99,6 +100,26 @@ public class EditNoteActivity extends AppCompatActivity {
             m_noteTitle.setText(noteFileName);
             m_noteBody.setText(note);
         }
+
+        imagesView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView parent, View view, final int position, long id) {
+                new AlertDialog.Builder(m_context)
+                        .setMessage("Do you want to delete this image?")
+                        .setPositiveButton(R.string.dialog_answer_yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                adapter.images.remove(position);
+                                adapter.notifyDataSetChanged();
+                            }
+                        })
+                        .setNegativeButton(R.string.dialog_answer_cancel, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }
+        });
 
         m_saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,25 +151,9 @@ public class EditNoteActivity extends AppCompatActivity {
         m_cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale((Activity)m_context, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-
-
-                }
-                /*if (ContextCompat.checkSelfPermission((Activity)m_context,
-                        Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-
-                    if (ActivityCompat.shouldShowRequestPermissionRationale((Activity)m_context, Manifest.permission.CAMERA)) {
-
-
-                    } else {
-                        ActivityCompat.requestPermissions((Activity)m_context,
-                                new String[]{Manifest.permission.CAMERA},
-                                1);
-                    }
-
-                }*/
                 // Request permission to use the camera
-                ActivityCompat.requestPermissions((Activity)m_context, new String[]{Manifest.permission.CAMERA}, 1);
+                ActivityCompat.requestPermissions((Activity)m_context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA }, 1);
+
                 new AlertDialog.Builder(m_context)
                         .setTitle(getString(R.string.dialog_question_camera))
                         .setMessage(getString(R.string.dialog_question_overwrite_note))
@@ -204,7 +209,6 @@ public class EditNoteActivity extends AppCompatActivity {
                             .setNegativeButton(getString(R.string.dialog_question_deny), new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {    }
                             })
-                            .setIcon(android.R.drawable.ic_dialog_alert)
                             .show();
                 } catch (Exception e) {
                     Toast.makeText(getApplicationContext(), getString(R.string.error_cannot_delete) + ". ", Toast.LENGTH_SHORT).show();
@@ -218,8 +222,12 @@ public class EditNoteActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
-            Uri selectedImage = data.getData();
-            adapter.images.add(selectedImage);
+            if (requestCode == 1314) {
+                Uri selectedImage = data.getData();
+                adapter.images.add(selectedImage);
+            } else {
+                adapter.images.add(photoUri2);
+            }
             adapter.notifyDataSetChanged();
         }
     }
@@ -244,12 +252,7 @@ public class EditNoteActivity extends AppCompatActivity {
             // Error occurred while creating the File
             return;
         }
-        //Uri photoURI = FileProvider.getUriForFile(this, this.getApplicationContext().getPackageName() + ".my.package.name.provider", createImageFile());
-        String imageName = "Blah211.jpg";
-        File imageFile = new File(pictureDirectory, imageName);
-        Uri pictureUri = Uri.fromFile(imageFile);
-        //Uri pictureUri = FileProvider.getUriForFile(m_context, m_context.getApplicationContext().getPackageName() + ".my.package.name.provider", createImageFile());
-        //cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, pictureUri);
+        photoUri2 = photoUri;
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
         cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
