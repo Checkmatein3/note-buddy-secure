@@ -243,8 +243,7 @@ public class EditNoteActivity extends AppCompatActivity {
     private void openCamera() {
         // Create camera intent
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        File pictureDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        Uri photoUri = null;
+        Uri photoUri;
 
         try {
             photoUri = FileProvider.getUriForFile(m_context, m_context.getApplicationContext().getPackageName() + ".my.package.name.provider", createImageFile());
