@@ -175,7 +175,25 @@ public class NotesActivity extends AppCompatActivity
         } else if(id == R.id.nav_lock) {
             startActvitiy(LOGIN_ACTIVITY, true, null, null);
 
-        } else if(id == R.id.nav_backup) {
+        } else if(id == R.id.nav_change) {
+            // startActivity(CHANGE_ACTIVITY, true, null, null);
+            new AlertDialog.Builder(m_context)
+                    .setTitle("This is a test")
+                    .setMessage("SUP fam")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick (DialogInterface dialog,int which){
+                            dialog.dismiss();
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+
+        } if(id == R.id.nav_backup) {
             final BackupCreator backupCreator = new BackupCreator();
             new AlertDialog.Builder(m_context)
                     .setTitle(getString(R.string.dialog_title_store_encrypted))

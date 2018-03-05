@@ -147,7 +147,7 @@ public class LoginActivity extends AppCompatActivity {
         if(providePassword) {
             /* intent.putExtra(KEY_PASSWORD, m_password);
             send username into the app after login, instead of password. */
-            try{
+            try {
                 m_password = KeyValueDB.getUsername(m_context);
             } catch (Exception e) {
                 Toast.makeText(getApplicationContext(), getString(R.string.error_login_general) + ". " + getString(R.string.action_try_again) + ".", Toast.LENGTH_SHORT).show();
