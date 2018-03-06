@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,6 +24,7 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -35,6 +35,7 @@ import nl.yoerinijs.nb.files.text.TextfileRemover;
 import nl.yoerinijs.nb.files.text.TextfileWriter;
 import nl.yoerinijs.nb.helpers.FullScreenImageActivity;
 import nl.yoerinijs.nb.helpers.ImageAdapter;
+import nl.yoerinijs.nb.storage.KeyValueDB;
 import nl.yoerinijs.nb.validators.NoteBodyValidator;
 import nl.yoerinijs.nb.validators.NoteTitleValidator;
 
@@ -100,6 +101,12 @@ public class EditNoteActivity extends AppCompatActivity {
             m_deleteButton.setVisibility(View.GONE);
             m_shareButton.setVisibility(View.GONE);
         } else {
+            try {
+                adapter.images = KeyValueDB.getURIs(m_context, noteFileName);
+                adapter.notifyDataSetChanged();
+            } catch (NoSuchAlgorithmException e) {
+                //Error...no images will be displayed
+            }
             m_noteTitle.setText(noteFileName);
             m_noteBody.setText(note);
         }
@@ -255,13 +262,14 @@ public class EditNoteActivity extends AppCompatActivity {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEGss_" + timeStamp + "_";
-        File storageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DCIM), "Camera");
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
+        //File storageDir = new File(Environment.getExternalStoragePublicDirectory(
+        //        Environment.DIRECTORY_DCIM), "Camera");
+        File image = new File(m_context.getFilesDir(), imageFileName);
+//        File image = File.createTempFile(
+//                imageFileName,  /* prefix */
+//                ".jpg",         /* suffix */
+//                storageDir      /* directory */
+//        );
 
         // Save a file: path for use with ACTION_VIEW intents
         // = "file:" + image.getAbsolutePath();
@@ -301,7 +309,7 @@ public class EditNoteActivity extends AppCompatActivity {
     private void writeNote(@NonNull String currentNoteTile, @Nullable final String oldNoteTitle, @NonNull String noteBody) {
         try {
             TextfileWriter textfileWriter = new TextfileWriter();
-            textfileWriter.writeFile(m_context, currentNoteTile, noteBody, m_password);
+            textfileWriter.writeFile(m_context, currentNoteTile, noteBody, m_password, adapter.images);
             if(null != oldNoteTitle) {
                 if(!currentNoteTile.equalsIgnoreCase(oldNoteTitle)) {
                     new AlertDialog.Builder(m_context)
@@ -327,6 +335,7 @@ public class EditNoteActivity extends AppCompatActivity {
                 postWriting();
             }
         } catch (Exception e) {
+            return;
             // Something went wrong. Skip.
         }
     }
