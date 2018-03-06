@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import nl.yoerinijs.nb.R;
 import nl.yoerinijs.nb.files.misc.LocationCentral;
+import nl.yoerinijs.nb.files.onedrive.OneDriverUploader;
 import nl.yoerinijs.nb.files.text.TextfileReader;
 import nl.yoerinijs.nb.files.text.TextfileRemover;
 import nl.yoerinijs.nb.files.text.TextfileWriter;
@@ -229,4 +230,16 @@ public class EditNoteActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+
+    /**
+    * Opens the OneDrive application for the user to upload the current note to their OneDrive
+    */
+    private void uploadNoteOD(String filename, int filesize) {
+        Intent intent = new Intent(this, OneDriverUploader.class);
+        Bundle b = new Bundle();
+        b.putString("name", filename); b.putInt("size", filesize);
+        intent.putExtras(b);
+        startActivity(intent); finish();
+    }
+
 }
