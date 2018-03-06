@@ -1,15 +1,16 @@
-package nl.yoerinijs.nb.helpers;
+package nl.yoerinijs.nb.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
+import android.support.v7.app.AlertDialog;
 
 import nl.yoerinijs.nb.R;
 
@@ -38,12 +39,14 @@ public class FullScreenImageActivity extends AppCompatActivity {
     }
 
     public void onDeleteImageClick(View view) {
-/*        new AlertDialog.Builder(m_context)
+        new AlertDialog.Builder(m_context)
                 .setMessage("Do you want to delete this image?")
                 .setPositiveButton(R.string.dialog_answer_yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        adapter.images.remove(position);
-                        adapter.notifyDataSetChanged();
+                        Intent resultIntent = new Intent();
+                        resultIntent.putExtra("ImageIndex", getIntent().getIntExtra("ImageIndex", 0));
+                        setResult(Activity.RESULT_OK, resultIntent);
+                        finish();
                     }
                 })
                 .setNegativeButton(R.string.dialog_answer_cancel, new DialogInterface.OnClickListener() {
@@ -51,6 +54,6 @@ public class FullScreenImageActivity extends AppCompatActivity {
                     }
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();*/
+                .show();
     }
 }

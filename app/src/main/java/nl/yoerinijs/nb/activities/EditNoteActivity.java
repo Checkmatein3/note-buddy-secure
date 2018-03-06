@@ -33,7 +33,6 @@ import nl.yoerinijs.nb.files.misc.LocationCentral;
 import nl.yoerinijs.nb.files.text.TextfileReader;
 import nl.yoerinijs.nb.files.text.TextfileRemover;
 import nl.yoerinijs.nb.files.text.TextfileWriter;
-import nl.yoerinijs.nb.helpers.FullScreenImageActivity;
 import nl.yoerinijs.nb.helpers.ImageAdapter;
 import nl.yoerinijs.nb.storage.KeyValueDB;
 import nl.yoerinijs.nb.validators.NoteBodyValidator;
@@ -64,7 +63,7 @@ public class EditNoteActivity extends AppCompatActivity {
 
     private TextfileReader m_textFileReader;
 
-    private ImageAdapter adapter;
+    public ImageAdapter adapter;
 
     private Uri photoUri2;
 
@@ -115,8 +114,9 @@ public class EditNoteActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView parent, View view, final int position, long id) {
                 Intent intent = new Intent(view.getContext(), FullScreenImageActivity.class);
-                intent.setData((Uri)imagesView.getAdapter().getItem(position));
-                startActivity(intent);
+                intent.setData(adapter.images.get(position));
+                intent.putExtra("ImageIndex", position);
+                startActivityForResult(intent, 2020);
             }
         });
 
@@ -224,8 +224,10 @@ public class EditNoteActivity extends AppCompatActivity {
             if (requestCode == 1314) {
                 Uri selectedImage = data.getData();
                 adapter.images.add(selectedImage);
-            } else {
+            } else if (resultCode == 1313) {
                 adapter.images.add(photoUri2);
+            } else {
+                adapter.images.remove(data.getIntExtra("ImageIndex", 0));
             }
             adapter.notifyDataSetChanged();
         }

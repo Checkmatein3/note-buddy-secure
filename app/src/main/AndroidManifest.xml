@@ -58,7 +58,7 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <activity android:name=".helpers.FullScreenImageActivity" android:parentActivityName=".activities.MainActivity"></activity>
+        <activity android:name=".activities.FullScreenImageActivity" android:parentActivityName=".activities.MainActivity"></activity>
     </application>
 
 </manifest>
