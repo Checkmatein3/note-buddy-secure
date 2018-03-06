@@ -33,6 +33,7 @@ import nl.yoerinijs.nb.files.misc.LocationCentral;
 import nl.yoerinijs.nb.files.text.TextfileReader;
 import nl.yoerinijs.nb.files.text.TextfileRemover;
 import nl.yoerinijs.nb.files.text.TextfileWriter;
+import nl.yoerinijs.nb.helpers.FullScreenImageActivity;
 import nl.yoerinijs.nb.helpers.ImageAdapter;
 import nl.yoerinijs.nb.validators.NoteBodyValidator;
 import nl.yoerinijs.nb.validators.NoteTitleValidator;
@@ -65,6 +66,8 @@ public class EditNoteActivity extends AppCompatActivity {
     private ImageAdapter adapter;
 
     private Uri photoUri2;
+
+    public static final String IMAGE_ADAPTER = "IMAGE_ADAPTER";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,20 +107,9 @@ public class EditNoteActivity extends AppCompatActivity {
         imagesView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView parent, View view, final int position, long id) {
-                new AlertDialog.Builder(m_context)
-                        .setMessage("Do you want to delete this image?")
-                        .setPositiveButton(R.string.dialog_answer_yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                adapter.images.remove(position);
-                                adapter.notifyDataSetChanged();
-                            }
-                        })
-                        .setNegativeButton(R.string.dialog_answer_cancel, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
-                        })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
+                Intent intent = new Intent(view.getContext(), FullScreenImageActivity.class);
+                intent.setData((Uri)imagesView.getAdapter().getItem(position));
+                startActivity(intent);
             }
         });
 
