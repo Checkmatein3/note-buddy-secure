@@ -5,13 +5,16 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -150,24 +153,14 @@ public class EditNoteActivity extends AppCompatActivity {
         m_cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Request permission to use the camera
-                ActivityCompat.requestPermissions((Activity)m_context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA }, 1);
 
-                new AlertDialog.Builder(m_context)
-                        .setTitle(getString(R.string.dialog_question_camera))
-                        .setMessage(getString(R.string.dialog_question_overwrite_note))
-                        .setPositiveButton(R.string.dialog_answer_camera, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                openCamera();
-                            }
-                        })
-                        .setNegativeButton(R.string.dialog_answer_camera_roll, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                openCameraRoll();
-                            }
-                        })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
+                if (ContextCompat.checkSelfPermission(m_context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(m_context,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions((Activity)m_context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA }, 1111);
+                } else {
+                    openCameraAlertDialog();
+                }
             }
         });
 
@@ -217,6 +210,18 @@ public class EditNoteActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        for (int result: grantResults) {
+            if (result != 0) {
+                return;
+            }
+        }
+        openCameraAlertDialog();
+    }
+
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -224,13 +229,31 @@ public class EditNoteActivity extends AppCompatActivity {
             if (requestCode == 1314) {
                 Uri selectedImage = data.getData();
                 adapter.images.add(selectedImage);
-            } else if (resultCode == 1313) {
+            } else if (requestCode == 1313) {
                 adapter.images.add(photoUri2);
             } else {
                 adapter.images.remove(data.getIntExtra("ImageIndex", 0));
             }
             adapter.notifyDataSetChanged();
         }
+    }
+
+    private void openCameraAlertDialog() {
+        new AlertDialog.Builder(m_context)
+                .setTitle(getString(R.string.dialog_question_camera))
+                .setMessage(getString(R.string.dialog_question_overwrite_note))
+                .setPositiveButton(R.string.dialog_answer_camera, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        openCamera();
+                    }
+                })
+                .setNegativeButton(R.string.dialog_answer_camera_roll, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        openCameraRoll();
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 
     private void openCameraRoll() {
@@ -264,17 +287,9 @@ public class EditNoteActivity extends AppCompatActivity {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEGss_" + timeStamp + "_";
-        //File storageDir = new File(Environment.getExternalStoragePublicDirectory(
-        //        Environment.DIRECTORY_DCIM), "Camera");
-        File image = new File(m_context.getFilesDir(), imageFileName);
-//        File image = File.createTempFile(
-//                imageFileName,  /* prefix */
-//                ".jpg",         /* suffix */
-//                storageDir      /* directory */
-//        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        // = "file:" + image.getAbsolutePath();
+        File storageDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DCIM), "Camera");
+        File image = new File(storageDir, imageFileName);
         return image;
     }
 
