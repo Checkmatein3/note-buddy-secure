@@ -17,10 +17,20 @@ import nl.yoerinijs.nb.storage.KeyValueDB;
  */
 public class TextfileWriter {
 
+    /**
+     * Calls an encryption function and then calls a write file function.
+     *
+     * @param context
+     * @param fileName
+     * @param fileContent
+     * @param password
+     * @throws Exception
+     */
     public void writeFile(Context context, String fileName, String fileContent, String password) throws Exception {
         String encryptedFileContent = EncryptionHandler.encryptFile(fileContent, password, context);
         writeFileContent(null, fileName, encryptedFileContent, context);
     }
+
 
     public void writeFile(Context context, String fileName, String fileContent, String password, ArrayList<Uri> images) throws Exception {
         String encryptedFileContent = EncryptionHandler.encryptFile(fileContent, password, context);
@@ -37,6 +47,7 @@ public class TextfileWriter {
             throw new IllegalStateException("File or file name must be provided!");
         }
         FileOutputStream fileOutputStream;
+
         if(null == file && null != context) {
             fileOutputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
         } else if(null != file) {
@@ -44,6 +55,7 @@ public class TextfileWriter {
         } else {
             throw new IllegalStateException("Expecting file is not null!");
         }
+
         try {
             fileOutputStream.write(fileContent.getBytes());
         } catch (FileNotFoundException f) {

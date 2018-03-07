@@ -33,6 +33,7 @@ import java.util.Date;
 
 import nl.yoerinijs.nb.R;
 import nl.yoerinijs.nb.files.misc.LocationCentral;
+import nl.yoerinijs.nb.files.onedrive.OneDriverUploader;
 import nl.yoerinijs.nb.files.text.TextfileReader;
 import nl.yoerinijs.nb.files.text.TextfileRemover;
 import nl.yoerinijs.nb.files.text.TextfileWriter;
@@ -91,6 +92,9 @@ public class EditNoteActivity extends AppCompatActivity {
         adapter = new ImageAdapter(m_context);
         imagesView.setAdapter(adapter);
 
+        //Linking to the upload button
+        FloatingActionButton m_uploadButton = (FloatingActionButton) findViewById(R.id.uploadButton);
+
         m_noteTitle = (EditText) findViewById(R.id.noteTitle);
         m_noteBody = (EditText) findViewById(R.id.noteText);
         m_password = getIntent().getStringExtra(LoginActivity.KEY_PASSWORD);
@@ -99,9 +103,11 @@ public class EditNoteActivity extends AppCompatActivity {
 
         final String note = getIntent().getStringExtra(NotesActivity.KEY_NOTE);
         final String noteFileName = getIntent().getStringExtra(NotesActivity.KEY_NOTE_TITLE);
+       //Hide delete, share and upload when creating a new note
         if (null == note && null == noteFileName) {
             m_deleteButton.setVisibility(View.GONE);
             m_shareButton.setVisibility(View.GONE);
+            m_uploadButton.setVisibility(View.GONE);
         } else {
             try {
                 adapter.images = KeyValueDB.getURIs(m_context, noteFileName);
@@ -205,6 +211,15 @@ public class EditNoteActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     Toast.makeText(getApplicationContext(), getString(R.string.error_cannot_delete) + ". ", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        //Onclick listener for the upload button
+        m_uploadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "Hey u want some upload? ", Toast.LENGTH_SHORT).show();
+                //uploadNoteOD();
             }
         });
     }
@@ -375,4 +390,18 @@ public class EditNoteActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+
+    /**
+    * Opens the OneDrive application for the user to upload the current note to their OneDrive
+    */
+    private void uploadNoteOD() {
+        String filename = m_noteTitle.getText().toString();
+        int filesize = filename.length() + 50;
+        Intent intent = new Intent(this, OneDriverUploader.class);
+        Bundle b = new Bundle();
+        b.putString("name", filename); b.putInt("size", filesize);
+        intent.putExtras(b);
+        startActivity(intent); //finish();
+    }
+
 }
