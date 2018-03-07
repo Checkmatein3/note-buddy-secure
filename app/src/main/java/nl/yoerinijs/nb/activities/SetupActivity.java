@@ -49,6 +49,8 @@ public class SetupActivity extends AppCompatActivity {
 
     private View m_loginFormView;
 
+    private String m_password;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,10 +134,6 @@ public class SetupActivity extends AppCompatActivity {
                 intent.putExtra(LoginActivity.KEY_PASSWORD, password);
                 startActivity(intent);
                 finish();
-
-
-
-
             } catch (Exception e) {
                 Toast.makeText(getApplicationContext(), getString(R.string.error_cannot_save) + ". ", Toast.LENGTH_SHORT).show();
             }

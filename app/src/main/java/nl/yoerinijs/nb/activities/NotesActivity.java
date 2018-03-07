@@ -60,6 +60,8 @@ public class NotesActivity extends AppCompatActivity
 
     private static final String SETUP_ACTIVITY = LocationCentral.SETUP;
 
+    private static final String CHANGE_ACTIVITY = LocationCentral.CHANGE;
+
     private static final String WEB_ISSUES = LocationCentral.ISSUES;
 
     private final Context m_context = this;
@@ -176,8 +178,8 @@ public class NotesActivity extends AppCompatActivity
             startActvitiy(LOGIN_ACTIVITY, true, null, null);
 
         } else if(id == R.id.nav_change) {
-            // startActivity(CHANGE_ACTIVITY, true, null, null);
-            new AlertDialog.Builder(m_context)
+            startActvitiy(CHANGE_ACTIVITY, true, null, null);
+            /*new AlertDialog.Builder(m_context)
                     .setTitle("This is a test")
                     .setMessage("SUP fam")
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -192,7 +194,7 @@ public class NotesActivity extends AppCompatActivity
                     })
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
-
+            */
         } if(id == R.id.nav_backup) {
             final BackupCreator backupCreator = new BackupCreator();
             new AlertDialog.Builder(m_context)
