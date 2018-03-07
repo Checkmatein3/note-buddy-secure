@@ -219,7 +219,7 @@ public class EditNoteActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getApplicationContext(), "Hey u want some upload? ", Toast.LENGTH_SHORT).show();
-                uploadNoteOD();
+                //uploadNoteOD();
             }
         });
     }
