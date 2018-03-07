@@ -39,7 +39,7 @@ public class OneDriverUploader extends Activity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.onedrive_saver);
+        setContentView(R.layout.onedrive_saver);
 
         // Get passed file name and file size
         Bundle b = getIntent().getExtras();
@@ -52,7 +52,7 @@ public class OneDriverUploader extends Activity {
         mSaver = Saver.createSaver(ONEDRIVE_APP_ID);
 
         // Add the start saving listener
-//        findViewById(R.id.startSaverButton).setOnClickListener(mStartPickingListener);
+        findViewById(R.id.startSaverButton).setOnClickListener(mStartPickingListener);
     }
 
     /**
@@ -62,7 +62,7 @@ public class OneDriverUploader extends Activity {
         @Override
         public void onClick(final View v) {
             final Activity activity = (Activity) v.getContext();
-//            activity.findViewById(R.id.result_table).setVisibility(View.INVISIBLE);
+            activity.findViewById(R.id.result_table).setVisibility(View.INVISIBLE);
 
          // Create a file
             final File f = createExternalSdCardFile(filename, filesize);
@@ -77,21 +77,21 @@ public class OneDriverUploader extends Activity {
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         // Check that we were able to save the file on OneDrive
-//        final TextView overallResult = (TextView) findViewById(R.id.overall_result);
-//        final TextView errorResult = (TextView) findViewById(R.id.error_type_result);
-//        final TextView debugErrorResult = (TextView) findViewById(R.id.debug_error_result);
+        final TextView overallResult = (TextView) findViewById(R.id.overall_result);
+        final TextView errorResult = (TextView) findViewById(R.id.error_type_result);
+        final TextView debugErrorResult = (TextView) findViewById(R.id.debug_error_result);
 
         try {
             mSaver.handleSave(requestCode, resultCode, data);
-//            overallResult.setText(getString(R.string.overall_result_success));
-//            errorResult.setText(getString(R.string.error_message_none));
-//            debugErrorResult.setText(getString(R.string.error_message_none));
+            overallResult.setText(getString(R.string.overall_result_success));
+            errorResult.setText(getString(R.string.error_message_none));
+            debugErrorResult.setText(getString(R.string.error_message_none));
         } catch (final SaverException e) {
-//            overallResult.setText(getString(R.string.overall_result_failure));
-//            errorResult.setText(e.getErrorType().toString());
-//            debugErrorResult.setText(e.getDebugErrorInfo());
+            overallResult.setText(getString(R.string.overall_result_failure));
+            errorResult.setText(e.getErrorType().toString());
+            debugErrorResult.setText(e.getDebugErrorInfo());
         }
-//        findViewById(R.id.result_table).setVisibility(View.VISIBLE);
+        findViewById(R.id.result_table).setVisibility(View.VISIBLE);
     }
 
     /**
