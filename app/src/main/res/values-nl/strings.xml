@@ -63,6 +63,9 @@
     <string name="dialog_question_delete_all_notes">Weet je zeker dat je alle notities wil verwijderen?</string>
     <string name="dialog_title_delete_ext_storage">Back-upruimte opschonen</string>
     <string name="dialog_question_delete_ext_storage">Weet je zeker dat je alle bestanden wilt verwijderen in</string>
+    <string name="dialog_question_camera">How would you like add a photo to your note?</string>
+    <string name="dialog_answer_camera">Camera</string>
+    <string name="dialog_answer_camera_roll">Camera Roll</string>
 
     <!-- String related to dev mode -->
     <string name="dev_clear_shared_preferences">Verwijder shared preferences</string>
