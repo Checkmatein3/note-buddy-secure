@@ -60,6 +60,9 @@ public class EditNoteActivity extends AppCompatActivity {
         FloatingActionButton m_deleteButton = (FloatingActionButton) findViewById(R.id.deleteButton);
         FloatingActionButton m_shareButton = (FloatingActionButton) findViewById(R.id.shareButton);
 
+        //Linking to the upload button
+        FloatingActionButton m_uploadButton = (FloatingActionButton) findViewById(R.id.uploadButton);
+
         m_noteTitle = (EditText) findViewById(R.id.noteTitle);
         m_noteBody = (EditText) findViewById(R.id.noteText);
         m_password = getIntent().getStringExtra(LoginActivity.KEY_PASSWORD);
@@ -68,9 +71,11 @@ public class EditNoteActivity extends AppCompatActivity {
 
         final String note = getIntent().getStringExtra(NotesActivity.KEY_NOTE);
         final String noteFileName = getIntent().getStringExtra(NotesActivity.KEY_NOTE_TITLE);
+       //Hide delete, share and upload when creating a new note
         if (null == note && null == noteFileName) {
             m_deleteButton.setVisibility(View.GONE);
             m_shareButton.setVisibility(View.GONE);
+            m_uploadButton.setVisibility(View.GONE);
         } else {
             m_noteTitle.setText(noteFileName);
             m_noteBody.setText(note);
@@ -145,6 +150,15 @@ public class EditNoteActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     Toast.makeText(getApplicationContext(), getString(R.string.error_cannot_delete) + ". ", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        //Onclick listener for the upload button
+        m_uploadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "Hey u want some upload? ", Toast.LENGTH_SHORT).show();
+                uploadNoteOD();
             }
         });
     }
@@ -234,12 +248,13 @@ public class EditNoteActivity extends AppCompatActivity {
     /**
     * Opens the OneDrive application for the user to upload the current note to their OneDrive
     */
-    private void uploadNoteOD(String filename, int filesize) {
+    private void uploadNoteOD(int filesize) {
+        String filename = m_noteTitle.getText().toString();
         Intent intent = new Intent(this, OneDriverUploader.class);
         Bundle b = new Bundle();
         b.putString("name", filename); b.putInt("size", filesize);
         intent.putExtras(b);
-        startActivity(intent); finish();
+        startActivity(intent); //finish();
     }
 
 }
