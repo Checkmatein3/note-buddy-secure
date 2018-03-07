@@ -215,13 +215,13 @@ public class EditNoteActivity extends AppCompatActivity {
         });
 
         //Onclick listener for the upload button
-        m_uploadButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Hey u want some upload? ", Toast.LENGTH_SHORT).show();
-                //uploadNoteOD();
-            }
-        });
+//        m_uploadButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                //Toast.makeText(getApplicationContext(), "Hey u want some upload? ", Toast.LENGTH_SHORT).show();
+//                uploadNoteOD();
+//            }
+//        });
     }
 
     @Override
