@@ -248,8 +248,9 @@ public class EditNoteActivity extends AppCompatActivity {
     /**
     * Opens the OneDrive application for the user to upload the current note to their OneDrive
     */
-    private void uploadNoteOD(int filesize) {
+    private void uploadNoteOD() {
         String filename = m_noteTitle.getText().toString();
+        int filesize = filename.length() + 50;
         Intent intent = new Intent(this, OneDriverUploader.class);
         Bundle b = new Bundle();
         b.putString("name", filename); b.putInt("size", filesize);
