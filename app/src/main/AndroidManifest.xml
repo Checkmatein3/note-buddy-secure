@@ -3,6 +3,11 @@
     package="nl.yoerinijs.nb">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -41,12 +46,25 @@
         <activity
             android:name=".activities.EditNoteActivity"
             android:label="@string/title_activity_create_note"
-            android:noHistory="true"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".activities.ChangeActivity"
             android:label="@string/title_activity_change"
             android:theme="@style/AppTheme"></activity>
+
+        <provider
+            android:name=".GenericFileProvider"
+            android:authorities="${applicationId}.my.package.name.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+
+        <activity android:name=".activities.FullScreenImageActivity" android:parentActivityName=".activities.MainActivity"></activity>
+
     </application>
 
 </manifest>

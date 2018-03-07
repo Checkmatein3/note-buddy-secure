@@ -3,10 +3,20 @@ package nl.yoerinijs.nb.storage;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.util.Base64;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import nl.yoerinijs.nb.security.EncryptionHandler;
 
@@ -154,7 +164,7 @@ public class KeyValueDB {
      * @return
      * @throws NoSuchAlgorithmException
      */
-    private static String getValue(@NonNull Context context, @NonNull String key) throws NoSuchAlgorithmException {
+    public static String getValue(@NonNull Context context, @NonNull String key) throws NoSuchAlgorithmException {
         SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         String text;
         if(isVersionNougatOrHigher()) {
@@ -173,7 +183,7 @@ public class KeyValueDB {
      * @param secure
      * @throws NoSuchAlgorithmException
      */
-    private static void setValue(@NonNull Context context, @NonNull String key, @NonNull String value, @NonNull Boolean secure) throws NoSuchAlgorithmException {
+    public static void setValue(@NonNull Context context, @NonNull String key, @NonNull String value, @NonNull Boolean secure) throws NoSuchAlgorithmException {
         SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         Editor editor = settings.edit();
 
@@ -188,6 +198,61 @@ public class KeyValueDB {
 
         editor.putString(key, value);
         editor.apply();
+    }
+
+    public static void setValue(@NonNull Context context, @NonNull String key, @NonNull ArrayList<Uri> value) throws NoSuchAlgorithmException {
+        SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        Editor editor = settings.edit();
+
+        // Check if current Android version is Nougat or higher. If so, hash key and hash value, if needed.
+        // Otherwise, use the raw key and value due to limitations by previous Android versions. Albeit this is not ideal, it is not really insecure due the fact
+        // notes are encrypted by an unknown password provided by the user. Nevertheless, it is possible to see the current keys.
+        // TODO: create a way so keys are always encrypted.
+
+        Set<String> newValues = new HashSet<>();
+
+        for (Uri uri : value) {
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
+                byte[] byteArrayImage = baos.toByteArray();
+                String encodedImage = Base64.encodeToString(byteArrayImage, Base64.DEFAULT);
+                newValues.add(encodedImage);
+            } catch (IOException e) {
+                return;
+            }
+        }
+
+        editor.putStringSet(key, newValues);
+        editor.apply();
+    }
+
+    public static ArrayList<Uri> getURIs(@NonNull Context context, @NonNull String key) throws NoSuchAlgorithmException {
+        SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        Set<String> strings = null;
+        if(isVersionNougatOrHigher()) {
+            strings = settings.getStringSet(key, new HashSet<String>());
+        } else {
+            strings = settings.getStringSet(key, new HashSet<String>());
+        }
+
+        ArrayList<Uri> uris = new ArrayList<>();
+
+        for (String string : strings) {
+            byte[] image = Base64.decode(string, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(image, 0, image.length);
+            uris.add(getImageUri(context, bitmap));
+        }
+
+        return uris;
+    }
+
+    private static Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
     }
 
     /**

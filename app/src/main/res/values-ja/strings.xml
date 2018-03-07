@@ -63,6 +63,9 @@
     <string name="dialog_question_delete_all_notes">Are you sure to delete all notes?</string>
     <string name="dialog_title_delete_ext_storage">Clear external storage</string>
     <string name="dialog_question_delete_ext_storage">Are you sure to delete all files in</string>
+    <string name="dialog_question_camera">How would you like add a photo to your note?</string>
+    <string name="dialog_answer_camera">Camera</string>
+    <string name="dialog_answer_camera_roll">Camera Roll</string>
 
     <!-- String related to dev mode -->
     <string name="dev_clear_shared_preferences">Clear shared prefs</string>
