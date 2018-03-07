@@ -126,4 +126,6 @@
     <!-- Strings related to settings -->
     <string name="action_settings">Instellingen</string>
     <string name="title_activity_settings">Instellingen</string>
+    <string name="title_activity_full_size_image">Image</string>
+
 </resources>
