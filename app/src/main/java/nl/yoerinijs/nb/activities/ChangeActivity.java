@@ -10,12 +10,10 @@ import android.support.v7.app.AppCompatActivity;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -27,7 +25,6 @@ import nl.yoerinijs.nb.security.LoginHashCreator;
 import nl.yoerinijs.nb.security.SaltHandler;
 import nl.yoerinijs.nb.storage.KeyValueDB;
 import nl.yoerinijs.nb.validators.PasswordValidator;
-import nl.yoerinijs.nb.validators.UsernameValidator;
 
 public class ChangeActivity extends AppCompatActivity {
 
@@ -37,8 +34,6 @@ public class ChangeActivity extends AppCompatActivity {
 
     private final Context m_context = this;
 
-    private AutoCompleteTextView m_username;
-
     private EditText m_passwordView;
 
     private EditText m_passwordCheckView;
@@ -47,14 +42,11 @@ public class ChangeActivity extends AppCompatActivity {
 
     private View m_loginFormView;
 
-    private String m_password;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setup);
 
-        m_username = (AutoCompleteTextView) findViewById(R.id.username);
         m_passwordView = (EditText) findViewById(R.id.password);
         m_passwordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -87,10 +79,8 @@ public class ChangeActivity extends AppCompatActivity {
      */
     private void attemptRegistration() {
 
-        m_username.setError(null);
         m_passwordView.setError(null);
 
-        String username = m_username.getText().toString();
         String password = m_passwordView.getText().toString();
         String passwordCheck = m_passwordCheckView.getText().toString();
 
@@ -107,20 +97,10 @@ public class ChangeActivity extends AppCompatActivity {
             focusView = m_passwordCheckView;
             cancel = true;
         }
-        if(TextUtils.isEmpty(username)) {
-            m_username.setError(getString(R.string.error_field_required));
-            focusView = m_username;
-            cancel = true;
-        } else if(!UsernameValidator.isUsernameValid(username)) {
-            m_username.setError(getString(R.string.error_invalid_username));
-            focusView = m_username;
-            cancel = true;
-        }
         if(cancel) {
             focusView.requestFocus();
         } else {
             try {
-                KeyValueDB.setUsername(m_context, username);
                 SaltHandler.setSalt(m_context);
                 KeyValueDB.setVerificationPasswordHash(m_context, LoginHashCreator.getLoginHash(m_context, password));
                 showProgress(true);
